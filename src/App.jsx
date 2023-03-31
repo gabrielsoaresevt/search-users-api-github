@@ -1,6 +1,91 @@
-import { Icon } from '@iconify/react';
+import { Icon } from '@iconify/react'
+import { useState, useEffect } from 'react'
 
-function App() {
+export function App() {
+
+  const [user, setUser] = useState({})
+
+  function monthAbbreviation(month) {
+    monthAbbreviation = "";
+    switch(month) {
+      case "01":
+        monthAbbreviation = "Jan."
+        break;
+      case "02":
+        monthAbbreviation = "Fev."
+        break;
+      case "03":
+        monthAbbreviation = "Mar."
+        break;
+      case "04":
+      monthAbbreviation = "Abr."
+        break;
+      case "05":
+        monthAbbreviation = "Maio"
+        break;
+      case "06":
+        monthAbbreviation = "Jun"
+        break;
+      case "07":
+        monthAbbreviation = "Jul"
+        break;
+      case "08":
+        monthAbbreviation = "Ago."
+        break;
+      case "09":
+        monthAbbreviation = "Set."
+        break;
+      case "10":
+        monthAbbreviation = "Out."
+        break;
+      case "11":
+        monthAbbreviation = "Nov."
+        break;
+      case "12":
+        monthAbbreviation = "Dez"
+    }
+
+    return monthAbbreviation;
+  }
+
+  function stringFormat(data) {
+    let splitData = data.split("T")
+    let newDataFormat = splitData[0].split("-")
+    let year = newDataFormat[0]
+    let month = monthAbbreviation(newDataFormat[1])
+    let day = newDataFormat[2]
+
+    return `Ingressou em ${day} de ${month} de ${year}`
+  }
+
+  function verifyNullString(string) {
+    return string = "" ? 'Não disponível' : string
+  }
+
+  useEffect(() => {
+    fetch('https://api.github.com/users/gabrielsoaresevt')
+      .then(response => response.json())
+      .then(data => {
+        setUser({
+          name: data.name,
+          login: `@${data.login}`,
+          html_url: data.html_url,
+          avatar: data.avatar_url,
+          created: stringFormat(data.created_at),
+          bio: data.bio,
+          repos: data.public_repos,
+          followers: data.followers,
+          following: data.following,
+          location: verifyNullString(data.location),
+          blog: user.blog = verifyNullString(user.blog),
+          twitter: user.twitter = verifyNullString(user.twitter),
+          company: user.company = verifyNullString(user.company)
+        })
+      })
+      .catch(e => console.log(e))
+
+  }, [])
+
   return (
     <div className="App">
       <header>
@@ -19,44 +104,44 @@ function App() {
 
         <div className="container user">
           <div className="container-img">
-            <img src="https://avatars.githubusercontent.com/u/583231?v=4" alt="Perfil Image" />
+            <img src={user.avatar} alt="Perfil Image" />
           </div>
           <div className="user-data">
             <div className="user-data__name">
-              <h2>The Octocat</h2>
-              <span>Joined 25 Jan 2011</span>
+              <h2>{user.name}</h2>
+              <span>{user.created}</span>
             </div>
             <div className="user-data__profile">
-              <a href="">@octocat</a>
+              <a href={user.html_url}>{user.login}</a>
             </div>
             <div className="user-data__bio">
-              <p>This profile have no bio</p> 
+              <p>{user.bio}</p> 
             </div>
             <div className="user-data__repo">
-              <ul class="user-data__repo__list">
+              <ul className="user-data__repo__list">
                 <li>
                   <h3>Repos</h3>
-                  <span>8</span>
+                  <span>{user.repos}</span>
                 </li>
                 <li>
                   <h3>Followers</h3>
-                  <span>3938</span>
+                  <span>{user.followers}</span>
                 </li>
                 <li>
                   <h3>Following</h3>
-                  <span>9</span>
+                  <span>{user.following}</span>
                 </li>
               </ul>
             </div>
             <div className="user-data__repo__social-media">
               <ul>
                 <div>
-                  <li><Icon className="iconify map-icon" icon="mdi:map-marker" /> San Francisco</li>
-                  <li><Icon className="iconify link-icon" icon="mdi:link-box-variant" /> <a href="#">https://github.blog</a></li>
+                  <li><Icon className="iconify map-icon" icon="mdi:map-marker" />{user.location}</li>
+                  <li><Icon className="iconify link-icon" icon="mdi:link-box-variant" /> <a href={user.blog}>{user.blog}</a></li>
                 </div>
                 <div>
-                  <li><Icon className="iconify twitter-icon" icon="mdi:twitter" /> <a href="#">Not Available</a></li>
-                  <li><Icon className="iconify company-icon" icon="mdi:company" /> @github</li>
+                  <li><Icon className="iconify twitter-icon" icon="mdi:twitter" /> <a href={user.twitter}>{user.twitter}</a></li>
+                  <li><Icon className="iconify company-icon" icon="mdi:company" />{user.company}</li>
                 </div>
               </ul>
             </div>
@@ -66,5 +151,3 @@ function App() {
     </div>
   )
 }
-
-export default App

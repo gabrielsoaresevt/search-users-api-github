@@ -121,13 +121,13 @@ main .container {
 
 .user-data__name {
   display: flex;
-  align-items: center;
   justify-content: space-between;
   gap: 10px;
 }
 
 .user-data__name span {
   opacity: 0.8;
+  text-align: right;
 }
 
 .user-data__profile {

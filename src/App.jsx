@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react'
 
 export function App() {
 
+  const [searchUser, setSearchUser] = useState('')
+  const [userName, setUserName] = useState('gabrielsoaresevt')
   const [user, setUser] = useState({})
 
   function monthAbbreviation(month) {
@@ -69,8 +71,12 @@ export function App() {
     return message
   }
 
+  function handleSearchUser() {
+    setUserName(searchUser);
+  }
+
   useEffect(() => {
-    fetch('https://api.github.com/users/gabrielsoaresevt')
+    fetch(`https://api.github.com/users/${userName}`)
       .then(response => response.json())
       .then(data => {
         setUser({
@@ -90,7 +96,7 @@ export function App() {
         })
       })
       .catch(e => console.log(e))
-  }, [])
+  }, [userName])  
 
   return (
     <div className="App">
@@ -103,8 +109,8 @@ export function App() {
         <div className="container">
           <div className="input-box">
             <Icon className="iconify search-icon" icon="material-symbols:search-rounded" />
-            <input type="text" placeholder="Procurar username do GitHub" />
-            <button type="submit">Search</button>
+            <input onChange={e => setSearchUser(e.target.value)} type="text" placeholder="Procurar username do GitHub" />
+            <button onClick={handleSearchUser}>Search</button>
           </div>
         </div>
 

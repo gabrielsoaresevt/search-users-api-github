@@ -6,60 +6,67 @@ export function App() {
   const [user, setUser] = useState({})
 
   function monthAbbreviation(month) {
-    monthAbbreviation = "";
+    let abbreviation = "";
     switch(month) {
       case "01":
-        monthAbbreviation = "Jan."
+        abbreviation = "Jan."
         break;
       case "02":
-        monthAbbreviation = "Fev."
+        abbreviation = "Fev."
         break;
       case "03":
-        monthAbbreviation = "Mar."
+        abbreviation = "Mar."
         break;
       case "04":
-      monthAbbreviation = "Abr."
+        abbreviation = "Abr."
         break;
       case "05":
-        monthAbbreviation = "Maio"
+        abbreviation = "Maio"
         break;
       case "06":
-        monthAbbreviation = "Jun"
+        abbreviation = "Jun."
         break;
       case "07":
-        monthAbbreviation = "Jul"
+        abbreviation = "Jul."
         break;
       case "08":
-        monthAbbreviation = "Ago."
+        abbreviation = "Ago."
         break;
       case "09":
-        monthAbbreviation = "Set."
+        abbreviation = "Set."
         break;
       case "10":
-        monthAbbreviation = "Out."
+        abbreviation = "Out."
         break;
       case "11":
-        monthAbbreviation = "Nov."
+        abbreviation = "Nov."
         break;
       case "12":
-        monthAbbreviation = "Dez"
-    }
+        abbreviation = "Dez."
+      }  
 
-    return monthAbbreviation;
+    return abbreviation;
   }
 
   function stringFormat(data) {
     let splitData = data.split("T")
     let newDataFormat = splitData[0].split("-")
     let year = newDataFormat[0]
-    let month = monthAbbreviation(newDataFormat[1])
+    let month = newDataFormat[1]
     let day = newDataFormat[2]
 
-    return `Ingressou em ${day} de ${month} de ${year}`
+    return `Ingressou em ${day} de ${monthAbbreviation(month)} de ${year}`
   }
 
-  function verifyNullString(string) {
-    return string = "" ? 'Não disponível' : string
+  function isUndefined(string) {
+    let message = ""
+    if(string === undefined) {
+      message = "Não disponível"
+    } else {
+      message = string
+    }
+
+    return message
   }
 
   useEffect(() => {
@@ -76,14 +83,13 @@ export function App() {
           repos: data.public_repos,
           followers: data.followers,
           following: data.following,
-          location: verifyNullString(data.location),
-          blog: user.blog = verifyNullString(user.blog),
-          twitter: user.twitter = verifyNullString(user.twitter),
-          company: user.company = verifyNullString(user.company)
+          location: data.location,
+          blog: isUndefined(user.blog),
+          twitter: isUndefined(user.twitter),
+          company: isUndefined(user.company)
         })
       })
       .catch(e => console.log(e))
-
   }, [])
 
   return (

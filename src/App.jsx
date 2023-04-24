@@ -71,6 +71,12 @@ export function App() {
     return message
   }
 
+  function handleKeyDown(event) {
+    if(event.key === 'Enter') {
+      setUserName(searchUser);
+    }
+  }
+
   function handleSearchUser() {
     setUserName(searchUser);
   }
@@ -109,7 +115,7 @@ export function App() {
         <div className="container">
           <div className="input-box">
             <Icon className="iconify search-icon" icon="material-symbols:search-rounded" />
-            <input onChange={e => setSearchUser(e.target.value)} type="text" placeholder="Procurar username do GitHub" />
+            <input onKeyDown={handleKeyDown} onChange={e => setSearchUser(e.target.value)} type="text" placeholder="Procurar username do GitHub" />
             <button onClick={handleSearchUser}>Search</button>
           </div>
         </div>

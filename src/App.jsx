@@ -1,5 +1,7 @@
 import { Icon } from '@iconify/react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef} from 'react'
+
+import Header from './components/Header'
 
 export function App() {
 
@@ -57,7 +59,7 @@ export function App() {
     let month = newDataFormat[1]
     let day = newDataFormat[2]
 
-    return `Ingressou em ${day} de ${monthAbbreviation(month)} de ${year}`
+    return `Ass. ${day} de ${monthAbbreviation(month)} de ${year}`
   }
 
   function isUndefined(string) {
@@ -67,7 +69,6 @@ export function App() {
     } else {
       message = string
     }
-
     return message
   }
 
@@ -81,36 +82,51 @@ export function App() {
     setUserName(searchUser);
   }
 
+  const containerRef = useRef();
+
+  function showError() {
+    const errorMessage = document.createElement('div');
+
+    errorMessage.classList.add("alert");
+    errorMessage.innerText = "Ops... usuário não encontrado";
+    
+    containerRef.current.appendChild(errorMessage);
+
+    setTimeout(() => {
+      errorMessage.remove();
+    }, 3000); 
+  }
+
   useEffect(() => {
     fetch(`https://api.github.com/users/${userName}`)
       .then(response => response.json())
       .then(data => {
-        setUser({
-          name: data.name,
-          login: `@${data.login}`,
-          html_url: data.html_url,
-          avatar: data.avatar_url,
-          created: stringFormat(data.created_at),
-          bio: data.bio,
-          repos: data.public_repos,
-          followers: data.followers,
-          following: data.following,
-          location: data.location,
-          blog: isUndefined(user.blog),
-          twitter: isUndefined(user.twitter),
-          company: isUndefined(user.company)
-        })
+        if(data.message === "Not Found") {
+          showError();
+        } else {
+          setUser({
+            name: isUndefined(data.name),
+            login: `@${data.login}`,
+            html_url: data.html_url,
+            avatar: data.avatar_url,
+            created: stringFormat(data.created_at),
+            bio: data.bio,
+            repos: data.public_repos,
+            followers: data.followers,
+            following: data.following,
+            location: isUndefined(data.location),
+            blog: isUndefined(user.blog),
+            twitter: isUndefined(user.twitter),
+            company: isUndefined(user.company)
+          })
+        }
       })
       .catch(e => console.log(e))
   }, [userName])  
 
   return (
-    <div className="App">
-      <header>
-        <div className="container">
-          <h1>devfinder</h1>
-        </div>
-      </header>
+    <div ref={containerRef} className="App">
+      <Header />
       <main>
         <div className="container">
           <div className="input-box">
